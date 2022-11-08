@@ -5,23 +5,26 @@ import '../styles/Card.css';
 
 export default class NewUser extends React.Component {
   state = {
-    name: '',
+    form:{
+      "email":""
+    },
+    error:false,
+    errorMsg:""
   }
 
-  handleChange = event => {
-    this.setState({ name: event.target.value });
+  handleChange = async event => {
+     await this.setState({ 
+      form: {
+        ...this.state.form,
+        [event.target.name]: event.target.value
+      }
+    });
+    console.log(this.state.form)
   }
 
-  handleSubmit = event => {
+  handleSubmit = (event) => {
     event.preventDefault();
-
-    const user = {
-      name: this.state.name
-    };
-
-    axios.post(`http://localhost:8080/users/add`, {
-        user: user.value
-     })
+    axios.post(`http://localhost:8080/users/add`,  this.state.form)
       .then(res => {
         console.log(res);
         console.log(res.data);
@@ -31,17 +34,12 @@ export default class NewUser extends React.Component {
   render() {
     return (
       <div className='card'>
-        <h1 className='title'>Bienvenido <br />ESCIHU WIZARDS</h1>
+        <h1 className='title'>ESCIHU WIZARDS</h1>
         <img src={logo} alt="Logo Escihu Wizards" className='logo'/>
         <p className='text-info'>Coloca el correo de tu cuenta de Github</p>
         <form onSubmit={this.handleSubmit} className="formData">
           <label>
-            <input 
-                type="text" 
-                name="name" 
-                onChange={this.handleChange} 
-                className='input' 
-                placeholder='example@example.com'/>
+            <input type="text" name="email" onChange={this.handleChange} className='input' />
           </label>
           <button type="submit" className='send'> Ingresar</button>
         </form>
