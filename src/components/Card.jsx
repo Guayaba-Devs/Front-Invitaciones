@@ -26,7 +26,7 @@ export default class NewUser extends React.Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    axios.post(env.API_URL,  this.state.form)
+    axios.post(env.API_URL,  this.state.form, console.log('Consulta la invitacion en tu correo'))
       .then(res => {
         console.log(res);
         console.log(res.data);
