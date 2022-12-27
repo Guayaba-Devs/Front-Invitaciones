@@ -1,54 +1,50 @@
-import React from 'react';
 import axios from 'axios';
 import env from 'react-dotenv';
 import { useState } from 'react';
-import { useEffect } from 'react'
 import logo from '../assets/Logo.png';
 import '../styles/Card.css';
 
 export default function Form() {
     
-    const email = { email: ""}
-    const [formValues, setFormValues] = useState(email);
-    const [formErrors, setFormErrors] = useState({});
-    const [isSubmit, setIsSumbit] = useState(false);
+    const [email, setEmail] = useState('');
+    const [formErrors, setFormErrors] = useState('');
+    const [isSubmit, setIsSumbit] = useState(0);
 
 
     const handleChange = (e) => {
-      const {name, value} = e.target;
-      setFormValues({ ...formValues, [name]: value});
-      console.log(formValues);
+      setEmail(e.target.value)
+      console.log("dentro del handleChange " + e.target.value)
     }  
 
     const handleSumbit = (e) =>{
       e.preventDefault();
-      axios.post(env.API_URL,  setFormErrors(validate(formValues)))
-      setIsSumbit(true);
-     }
-
-    useEffect (() => {
-      console.log(formErrors)
-      if(Object.keys(formErrors).length === 0 && isSubmit){
-        console.log(formValues);
+      if(validate(email)){
+          console.log("Correo valido")
+          axios.post(env.API_URL, {email})
+          
+          setIsSumbit(isSubmit + 1);
+          console.log("condicion 1 " +   setIsSumbit(isSubmit + 1))
+      }else{
+        setFormErrors('Correo no valido')
       }
-    })
-    const validate = (values) => {
-        const errors = {}
-        const regex =  /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+    }
 
-        if(!values.email){
-          errors.email = "El correo es requerido";
-        } else if (!regex.test(values.email)) {
-          errors.email = "El correo no es valido";
 
+    const validate = (email) => {
+        const emailRegex =  /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+        console.log(email);
+        if(email === ''){
+          setFormErrors('El correo es requerido')
+        } else if (!emailRegex.test(email)) {
+          setFormErrors('El correo no es valido')
         } 
-        return errors;
+        return setFormErrors;
 
     }
 
     return (
       <div>
-        {Object.keys(formErrors).length === 0 && isSubmit ? (<div className='message-success'>Te registrarte de forma exitosa</div>) : ''}
+        {Object.keys(formErrors).length === 0 && isSubmit ? (<div className='message-success'>Te registrarte de forma exitosa</div>) : console.log(Object.keys(formErrors).length === 0 && isSubmit)}
         <div className='card'>
         <h1 className='title'>ESCIHU WIZARDS</h1>
         <img src={logo} alt="Logo Escihu Wizards" className='logo'/>
@@ -56,7 +52,7 @@ export default function Form() {
         <form onSubmit={handleSumbit} className="formData">
           <label>
             <input type="text" name="email" onChange={handleChange} className='input' />
-            {Object.keys(formErrors).length > 0 ? ( <p className='errors'>{formErrors.email}</p>) : ''}
+            {Object.keys(formErrors).length > 0 ? ( <p className='errors'>{formErrors}</p>) : ''}
           </label>
           <button type="submit" className='send'> Ingresar</button>
         </form>
