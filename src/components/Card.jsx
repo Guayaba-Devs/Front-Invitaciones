@@ -1,51 +1,68 @@
 import React from 'react';
 import axios from 'axios';
 import env from 'react-dotenv';
+import { useState } from 'react';
+import { useEffect } from 'react'
 import logo from '../assets/Logo.png';
 import '../styles/Card.css';
 
-export default class NewUser extends React.Component {
+export default function Form() {
     
-  state = {
-    form:{
-      "email":""
-    },
-    error:false,
-    errorMsg:""
-  }
+    const email = { email: ""}
+    const [formValues, setFormValues] = useState(email);
+    const [formErrors, setFormErrors] = useState({});
+    const [isSubmit, setIsSumbit] = useState(false);
 
-  handleChange = async event => {
-     await this.setState({ 
-      form: {
-        ...this.state.form,
-        [event.target.name]: event.target.value
+
+    const handleChange = (e) => {
+      const {name, value} = e.target;
+      setFormValues({ ...formValues, [name]: value});
+      console.log(formValues);
+    }  
+
+    const handleSumbit = (e) =>{
+      e.preventDefault();
+      axios.post(env.API_URL,  setFormErrors(validate(formValues)))
+      setIsSumbit(true);
+     }
+
+    useEffect (() => {
+      console.log(formErrors)
+      if(Object.keys(formErrors).length === 0 && isSubmit){
+        console.log(formValues);
       }
-    });
-    console.log(this.state.form)
-  }
+    })
+    const validate = (values) => {
+        const errors = {}
+        const regex =  /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
 
-  handleSubmit = (event) => {
-    event.preventDefault();
-    axios.post(env.API_URL,  this.state.form, alert('Consulta la invitacion en tu correo'))
-      .then(res => {
-        console.log(res);
-        console.log(res.data);
-      })
-  }
+        if(!values.email){
+          errors.email = "El correo es requerido";
+        } else if (!regex.test(values.email)) {
+          errors.email = "El correo no es valido";
 
-  render() {
+        } 
+        return errors;
+
+    }
+
     return (
-      <div className='card'>
+      <div>
+        {Object.keys(formErrors).length === 0 && isSubmit ? (<div className='message-success'>Te registrarte de forma exitosa</div>) : ''}
+        <div className='card'>
         <h1 className='title'>ESCIHU WIZARDS</h1>
         <img src={logo} alt="Logo Escihu Wizards" className='logo'/>
         <p className='text-info'>Coloca el correo de tu cuenta de Github</p>
-        <form onSubmit={this.handleSubmit} className="formData">
+        <form onSubmit={handleSumbit} className="formData">
           <label>
-            <input type="text" name="email" onChange={this.handleChange} className='input' />
+            <input type="text" name="email" onChange={handleChange} className='input' />
+            {Object.keys(formErrors).length > 0 ? ( <p className='errors'>{formErrors.email}</p>) : ''}
           </label>
           <button type="submit" className='send'> Ingresar</button>
         </form>
       </div>
+      </div>
+      
     )
-  }
+  
 }

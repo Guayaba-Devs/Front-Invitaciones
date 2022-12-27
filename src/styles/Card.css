@@ -77,3 +77,20 @@
     color: #3E5372;
     border: 1px solid #3E5372;
 }
+
+.errors{
+    background-color: #3E5372;
+    padding: 15px;
+    color: #fff;
+    border-radius: 3px;    
+    font-weight: 600;
+}
+
+.message-success{
+    background-color: #3E5372;
+    padding: 15px;
+    margin-bottom: 5px;
+    color: #fff;
+    border-radius: 3px;    
+    font-weight: 600;
+}
