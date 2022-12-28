@@ -8,6 +8,8 @@ export default function Form() {
   const [email, setEmail] = useState("");
   const [formErrors, setFormErrors] = useState("");
   const [isSubmit, setIsSumbit] = useState(0);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [showErrorMessage, setErrorMessage] = useState(false);
 
   const handleChange = (e) => {
     setEmail(e.target.value);
@@ -18,6 +20,7 @@ export default function Form() {
     e.preventDefault();
     if (validate(email)) {
       console.log("Correo valido");
+      setShowSuccessMessage(true);
       axios
         .post(env.API_URL, { email })
         .then((response) => {
@@ -33,11 +36,21 @@ export default function Form() {
           }
         });
       setIsSumbit(isSubmit + 1);
+
+      setTimeout(function () {
+        setShowSuccessMessage(false);
+      }, 3000);
+    } else {
+      setErrorMessage(true);
+      setTimeout(function () {
+        setErrorMessage(false);
+      }, 3000);
     }
   };
 
   const validate = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+    const emailRegex =
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     console.log("Validando " + email);
     setFormErrors("");
     if (email === "") {
@@ -52,11 +65,12 @@ export default function Form() {
 
   return (
     <div>
-      {Object.keys(formErrors).length === 0 && isSubmit ? (
-        <div className="message-success">Te registrarte de forma exitosa</div>
+      {showSuccessMessage ? (
+        <div className="message-success">Te registraste de forma exitosa</div>
       ) : (
         ""
       )}
+      {showErrorMessage ? <p className="errors">{formErrors}</p> : ""}
       <div className="card">
         <h1 className="title">ESCIHU WIZARDS</h1>
         <img src={logo} alt="Logo Escihu Wizards" className="logo" />
@@ -69,11 +83,6 @@ export default function Form() {
               onChange={handleChange}
               className="input"
             />
-            {Object.keys(formErrors).length > 0 ? (
-              <p className="errors">{formErrors}</p>
-            ) : (
-              ""
-            )}
           </label>
           <button type="submit" className="send">
             {" "}

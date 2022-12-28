@@ -84,13 +84,58 @@
     color: #fff;
     border-radius: 3px;    
     font-weight: 600;
+    box-shadow: 0 0 10px rgba(141, 141, 141, 0.5);
+    margin-bottom: 10px;
+        -webkit-animation: errors 1.2s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+            animation: errors 1.2s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+    
 }
 
 .message-success{
     background-color: #3E5372;
     padding: 15px;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     color: #fff;
     border-radius: 3px;    
     font-weight: 600;
+    box-shadow: 0 0 10px rgba(141, 141, 141, 0.5);
+    background-image: none;
+	-webkit-animation: message-success 1.2s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+	        animation: message-success 1.2s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
 }
+
+ @-webkit-keyframes message-success {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  @keyframes message-success {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  
+
+@-webkit-keyframes errors {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  @keyframes errors {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  
