@@ -1,10 +1,12 @@
+import React from 'react';
 import './App.css';
 import Card from './components/Card';
 
-function App() {
+const App = () => {
+
   return (
     <div className="App">
-      <Card />
+      <Card orgName={process.env.REACT_APP_ORGNAME} token={process.env.REACT_APP_TOKEN}/>
     </div>
   );
 }
